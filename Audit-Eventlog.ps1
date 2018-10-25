@@ -70,7 +70,7 @@
             if($csvexport)
                 {
                     $path = "$env:USERPROFILE\desktop\Eventlogs_"+$((get-date).ToString("ddmmyyhhmm"))+".csv"
-                    $resultsarray | select Timecreated,Id,Logname,LevelDisplayName,Message | Export-Csv -Path $path -NoTypeInformation
+                    $resultsarray |Sort-Object TimeCreated | Timecreated |select Timecreated,Id,Logname,LevelDisplayName,Message | Export-Csv -Path $path -NoTypeInformation
 
                     Write-Host "Events Saved to:`t" -NoNewline
                     Write-Host -ForegroundColor Yellow $path

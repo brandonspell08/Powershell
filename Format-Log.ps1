@@ -9,7 +9,7 @@
             [System.IO.FileInfo[]]$path = '$env:windir\debug\usermode\gpsvc.log',
             [Parameter(
                 )]
-            [ValidateSet('gplog','iislog')]
+            [ValidateSet('gplog','iislog','SQL')]
             [string]$logformat
 
             
@@ -23,10 +23,11 @@
                         Write-Error -Message "Can't access logfile" -TargetObject $file -RecommendedAction "Check the path and try again.";return
                     }
 
-                switch ($logformat)
+                $regex = switch ($logformat)
                     {
-                        "gplog"  {$regex = "(?<time>\d{2}:\d{2}:\d{2}:\d{3}) (?<message>.+)$"}
+                        "gplog"  {"(?<time>\d{2}:\d{2}:\d{2}:\d{3}) (?<message>.+)$"}
                         "iislog" {}
+                        "ClusterLog" {"^(?<pid>[0-9a-f]{8})\.(?<ThreadID>[0-9a-f]{8})::(?<Date>\d{4}/\d{1,2}/\d{1,2})-(?<Time>\d{2}:\d{2}:\d{2}).\d{3}\s(?<Level>\w+)\s+(?<ResourceType>\[\w+\][\d\D-[:]]+):(?<Message>.+)"}
                     }
                 
                 
